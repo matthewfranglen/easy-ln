@@ -19,10 +19,10 @@ Useage
 
 As much as possible the useage matches the useage of ln. *The main difference is that this creates symbolic links*.
 
-easy-ln [-T] TARGET    LINK_NAME (1st form)  
-easy-ln      TARGET              (2nd form)  
-easy-ln      TARGET... DIRECTORY (3rd form)  
-easy-ln -t   DIRECTORY TARGET... (4th form)  
+    easy-ln [-T] TARGET    LINK_NAME (1st form)
+    easy-ln      TARGET              (2nd form)
+    easy-ln      TARGET... DIRECTORY (3rd form)
+    easy-ln -t   DIRECTORY TARGET... (4th form)
 
 In the 1st form, create a link to TARGET with the name LINK_NAME. In the 2nd form, create a link to TARGET in the current directory. In the 3rd and 4th forms, create links to each TARGET in DIRECTORY. This will always create symbolic links.
 
