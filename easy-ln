@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# This will allow you to specify a link target relative to your current
+# location rather than relative to the final target. The link created by this
+# will be absolute.
+
+# This always creates symbolic links.
+
+COMMAND=$(basename $0)
+
+error () {
+    cat <<EOF >&2
+$COMMAND [-T] TARGET    LINK_NAME (1st form)
+$COMMAND      TARGET              (1st form)
+$COMMAND      TARGET... DIRECTORY (1st form)
+$COMMAND -t   DIRECTORY TARGET... (1st form)
+
+In the 1st form, create a link to TARGET with the name LINK_NAME. In the 2nd
+form, create a link to TARGET in the current directory. In the 3rd and 4th
+forms, create links to each TARGET in DIRECTORY. This will always create
+symbolic links.
+
+This command is designed to make it easier to create links that are not in the
+current directory. When using the base ln command, the TARGET is always
+relative to the LINK_NAME. When using this command, the TARGET is always
+relative to the calling location.
+
+Example:
+
+    ln -s target folder/folder/link
+    This will create a link to folder/folder/target.
+
+    easy-ln target folder/folder/link
+    This will create a link to target.
+
+Currently this always creates absolute links. That may change in future.
+
+EOF
+
+    echo $@ >&2
+    exit 1
+}
+
+make_link () {
+    echo;
+}
+
+to_absolute () {
+    readlink -e $1
+}
+
+
+
+# vim: set ai et sw=4 syntax=sh :
