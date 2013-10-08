@@ -17,7 +17,7 @@ This supports [antigen](https://github.com/zsh-users/antigen) installation.
 Useage
 ------
 
-As much as possible the useage matches the useage of ln. *The main difference is that this creates symbolic links*.
+As much as possible the useage matches the useage of ln. *The main difference is that this always creates symbolic links*.
 
     easy-ln [-T] TARGET    LINK_NAME (1st form)
     easy-ln      TARGET              (2nd form)
