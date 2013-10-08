@@ -42,7 +42,6 @@ EOF
 
 #    TARGET    LINK_NAME (1st form)
 handle_1st () {
-    echo handle_1st
     ln -s ${1:A} $2
 }
 
