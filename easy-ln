@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # This will allow you to specify a link target relative to your current
 # location rather than relative to the final target. The link created by this
@@ -10,10 +10,10 @@ COMMAND=$(basename $0)
 
 error () {
     cat <<EOF >&2
-$COMMAND [-T] TARGET    LINK_NAME (1st form)
-$COMMAND      TARGET              (2nd form)
-$COMMAND      TARGET... DIRECTORY (3rd form)
-$COMMAND -t   DIRECTORY TARGET... (4th form)
+$COMMAND    TARGET    LINK_NAME (1st form)
+$COMMAND    TARGET              (2nd form)
+$COMMAND    TARGET... DIRECTORY (3rd form)
+$COMMAND -t DIRECTORY TARGET... (4th form)
 
 In the 1st form, create a link to TARGET with the name LINK_NAME. In the 2nd
 form, create a link to TARGET in the current directory. In the 3rd and 4th
@@ -35,9 +35,8 @@ Example:
 
 Currently this always creates absolute links. That may change in future.
 
+$@
 EOF
-
-    echo $@ >&2
     exit 1
 }
 
@@ -49,6 +48,56 @@ to_absolute () {
     readlink -e $1
 }
 
+#    TARGET    LINK_NAME (1st form)
+handle_1st () {
+    echo handle_1st
+}
+
+#    TARGET              (2nd form)
+handle_2nd () {
+    echo handle_2nd
+}
+
+#    TARGET... DIRECTORY (3rd form)
+handle_3rd () {
+    echo handle_3rd
+}
+
+# -t DIRECTORY TARGET... (4th form)
+handle_4th () {
+    echo handle_4th
+}
 
 
-# vim: set ai et sw=4 syntax=sh :
+local is_4th
+
+zparseopts -D t=is_4th
+
+if [ ${#@} = 0 ]
+then
+    error
+elif [ ! -z $is_4th ]
+then
+    handle_4th
+else
+    case ${#@} in
+        # 0 handled earlier
+        1)
+            handle_2nd $1
+            ;;
+        2)
+            # May be 1st or 3rd, is last item directory?
+            if [ -d ${@[${#@}]} ]
+            then
+                handle_3rd $@
+            else
+                handle_1st $@
+            fi
+            ;;
+        *)
+            handle_3rd $@
+            ;;
+    esac
+fi
+
+# vim: set ai et sw=4 syntax=zsh :
