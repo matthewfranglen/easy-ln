@@ -10,7 +10,9 @@ Installation
 
 Clone the repository and put easy-ln in a folder on your path, or add the repository folder to your path.
 
-This supports antigen installation.
+This supports [antigen](https://github.com/zsh-users/antigen) installation.
+
+    antigen bundle matthewfranglen/easy-ln
 
 Useage
 ------
