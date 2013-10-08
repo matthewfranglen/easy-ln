@@ -11,9 +11,9 @@ COMMAND=$(basename $0)
 error () {
     cat <<EOF >&2
 $COMMAND [-T] TARGET    LINK_NAME (1st form)
-$COMMAND      TARGET              (1st form)
-$COMMAND      TARGET... DIRECTORY (1st form)
-$COMMAND -t   DIRECTORY TARGET... (1st form)
+$COMMAND      TARGET              (2nd form)
+$COMMAND      TARGET... DIRECTORY (3rd form)
+$COMMAND -t   DIRECTORY TARGET... (4th form)
 
 In the 1st form, create a link to TARGET with the name LINK_NAME. In the 2nd
 form, create a link to TARGET in the current directory. In the 3rd and 4th
