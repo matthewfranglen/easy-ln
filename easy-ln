@@ -1,0 +1,110 @@
+#!/bin/zsh
+
+# This will allow you to specify a link target relative to your current
+# location rather than relative to the final target. The link created by this
+# will be absolute.
+
+# This always creates symbolic links.
+
+COMMAND=$(basename $0)
+
+error () {
+    cat <<EOF >&2
+$COMMAND    TARGET    LINK_NAME (1st form)
+$COMMAND    TARGET              (2nd form)
+$COMMAND    TARGET... DIRECTORY (3rd form)
+$COMMAND -t DIRECTORY TARGET... (4th form)
+
+In the 1st form, create a link to TARGET with the name LINK_NAME. In the 2nd
+form, create a link to TARGET in the current directory. In the 3rd and 4th
+forms, create links to each TARGET in DIRECTORY. This will always create
+symbolic links.
+
+This command is designed to make it easier to create links that are not in the
+current directory. When using the base ln command, the TARGET is always
+relative to the LINK_NAME. When using this command, the TARGET is always
+relative to the calling location.
+
+Example:
+
+    ln -s target folder/folder/link
+    This will create a link to folder/folder/target.
+
+    easy-ln target folder/folder/link
+    This will create a link to target.
+
+Currently this always creates absolute links. That may change in future.
+
+$@
+EOF
+    exit 1
+}
+
+#    TARGET    LINK_NAME (1st form)
+handle_1st () {
+    echo handle_1st
+    ln -s ${1:A} $2
+}
+
+#    TARGET              (2nd form)
+handle_2nd () {
+    ln -s $1
+}
+
+#    TARGET... DIRECTORY (3rd form)
+handle_3rd () {
+    local directory
+
+    directory=${@[${#@}]}
+    for index in {1..$((${#@} - 1))}
+    do
+        target=${@[$index]:A}
+        ln -s ${target} ${directory}/${target:t}
+    done
+}
+
+# -t DIRECTORY TARGET... (4th form)
+handle_4th () {
+    local directory
+
+    directory=$1
+    for index in {2..${#@}}
+    do
+        target=${@[$index]:A}
+        ln -s ${target} ${directory}/${target:t}
+    done
+}
+
+
+local is_4th
+
+zparseopts -D t=is_4th
+
+if [ ${#@} = 0 ]
+then
+    error
+elif [ ! -z $is_4th ]
+then
+    handle_4th $@
+else
+    case ${#@} in
+        # 0 handled earlier
+        1)
+            handle_2nd $1
+            ;;
+        2)
+            # May be 1st or 3rd, is last item directory?
+            if [ -d ${@[${#@}]} ]
+            then
+                handle_3rd $@
+            else
+                handle_1st $@
+            fi
+            ;;
+        *)
+            handle_3rd $@
+            ;;
+    esac
+fi
+
+# vim: set ai et sw=4 syntax=zsh :
