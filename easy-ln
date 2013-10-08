@@ -40,32 +40,39 @@ EOF
     exit 1
 }
 
-make_link () {
-    echo;
-}
-
-to_absolute () {
-    readlink -e $1
-}
-
 #    TARGET    LINK_NAME (1st form)
 handle_1st () {
     echo handle_1st
+    ln -s ${1:A} $2
 }
 
 #    TARGET              (2nd form)
 handle_2nd () {
-    echo handle_2nd
+    ln -s $1
 }
 
 #    TARGET... DIRECTORY (3rd form)
 handle_3rd () {
-    echo handle_3rd
+    local directory
+
+    directory=${@[${#@}]}
+    for index in {1..$((${#@} - 1))}
+    do
+        target=${@[$index]:A}
+        ln -s ${target} ${directory}/${target:t}
+    done
 }
 
 # -t DIRECTORY TARGET... (4th form)
 handle_4th () {
-    echo handle_4th
+    local directory
+
+    directory=$1
+    for index in {2..${#@}}
+    do
+        target=${@[$index]:A}
+        ln -s ${target} ${directory}/${target:t}
+    done
 }
 
 
@@ -78,7 +85,7 @@ then
     error
 elif [ ! -z $is_4th ]
 then
-    handle_4th
+    handle_4th $@
 else
     case ${#@} in
         # 0 handled earlier
